@@ -21,6 +21,7 @@ export const Container = styled.div<ContainerProps>`
         color: #fff;
         text-decoration: none;
         font-size: 16px;
+        opacity: 0.8;
         transition: opacity 0.2s;
 
         & + a {
@@ -28,7 +29,12 @@ export const Container = styled.div<ContainerProps>`
         }
 
         &:hover {
-          opacity: 0.6;
+          width: 73px;
+          height: 2px;
+          opacity: 1;
+          color: #ffffff;
+          text-decoration: underline #ff872c solid 2px;
+          text-underline-offset: 12px;
         }
       }
     }

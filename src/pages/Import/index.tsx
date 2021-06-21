@@ -7,7 +7,7 @@ import Header from '../../components/Header';
 import FileList from '../../components/FileList';
 import Upload from '../../components/Upload';
 
-import { Container, Title, ImportFileContainer, Footer } from './styles';
+import { Container, Title, ImportFileContainer, Error, Footer } from './styles';
 
 import alert from '../../assets/alert.svg';
 import api from '../../services/api';
@@ -20,22 +20,36 @@ interface FileProps {
 
 const Import: React.FC = () => {
   const [uploadedFiles, setUploadedFiles] = useState<FileProps[]>([]);
+  const [inputError, setInputError] = useState('');
   const history = useHistory();
 
   async function handleUpload(): Promise<void> {
-    // const data = new FormData();
+    const data = new FormData();
 
-    // TODO
+    if (!uploadedFiles.length) {
+      setInputError('Nenhum arquivo foi carregado');
+      return;
+    }
+
+    const file = uploadedFiles[0];
+    data.append('file', file.file, file.name);
 
     try {
-      // await api.post('/transactions/import', data);
+      await api.post('/transactions/import', data);
+      history.push('/');
+      setInputError('');
     } catch (err) {
-      // console.log(err.response.error);
+      setInputError('Arquivo com o formato inválido');
     }
   }
 
   function submitFile(files: File[]): void {
-    // TODO
+    const submittedFiles = files.map(file => ({
+      file,
+      name: file.name,
+      readableSize: filesize(file.size),
+    }));
+    setUploadedFiles(submittedFiles);
   }
 
   return (
@@ -47,7 +61,7 @@ const Import: React.FC = () => {
           <Upload onUpload={submitFile} />
           {!!uploadedFiles.length && <FileList files={uploadedFiles} />}
 
-          <Footer>
+          <Footer hasError={!!inputError}>
             <p>
               <img src={alert} alt="Alert" />
               Permitido apenas arquivos CSV
@@ -56,6 +70,7 @@ const Import: React.FC = () => {
               Enviar
             </button>
           </Footer>
+          {inputError && <Error>{inputError}</Error>}
         </ImportFileContainer>
       </Container>
     </>

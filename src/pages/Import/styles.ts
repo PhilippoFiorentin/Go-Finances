@@ -1,5 +1,9 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { shade } from 'polished';
+
+interface UploadProps {
+  hasError: boolean;
+}
 
 export const Container = styled.div`
   width: 100%;
@@ -15,6 +19,11 @@ export const Title = styled.h1`
   color: #363f5f;
   text-align: center;
 `;
+export const Error = styled.span`
+  display: block;
+  color: #c53030;
+  margin-top: 8px;
+`;
 
 export const ImportFileContainer = styled.section`
   background: #fff;
@@ -23,7 +32,7 @@ export const ImportFileContainer = styled.section`
   padding: 64px;
 `;
 
-export const Footer = styled.section`
+export const Footer = styled.section<UploadProps>`
   margin-top: 36px;
   display: flex;
   align-items: center;
@@ -40,6 +49,12 @@ export const Footer = styled.section`
       margin-right: 5px;
     }
   }
+
+  ${props =>
+    props.hasError &&
+    css`
+      border-color: #c53030;
+    `}
 
   button {
     background: #ff872c;
